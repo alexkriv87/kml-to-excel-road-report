@@ -1,0 +1,7 @@
+__pycache__/ 
+*.pyc 
+_internal/logs/ 
+tempCodeRunnerFile.python 
+test.ipynb 
+.vscode/ 
+.DS_Store 
