@@ -6,8 +6,6 @@ from pathlib import Path
 Системные константы, не предназначенные для изменения пользователем.
 """
 
-
-
 # Размер буфера для поиска связей (в градусах, примерно 50 м на широте 60)
 BUFFER_SIZE = 0.0005
 
@@ -89,11 +87,55 @@ def get_base_path():
         # Запущено из скрипта
         return Path(__file__).parent
 
+
+def find_data_file(filename):
+    """
+    Ищет файл в папках: рядом с exe, в data, в _internal, рекурсивно.
+    Возвращает Path к файлу или вызывает FileNotFoundError.
+    """
+    base_path = get_base_path()
+    
+    # Возможные места поиска
+    search_paths = [
+        base_path,                           # рядом с exe
+        base_path / 'data',                  # папка data рядом
+        base_path / '_internal',             # внутри _internal
+        base_path / '_internal' / 'data',    # внутри _internal/data
+        base_path.parent,                    # на уровень выше
+        Path.cwd(),                          # текущая рабочая папка
+    ]
+    
+    # Прямой поиск по указанным папкам
+    for search_path in search_paths:
+        if not search_path.exists():
+            continue
+        candidate = search_path / filename
+        if candidate.exists():
+            return candidate
+    
+    # Если не нашли — рекурсивный поиск во всех подпапках base_path
+    for found in base_path.rglob(filename):
+        return found
+    
+    raise FileNotFoundError(f"Не найден файл: {filename}")
+
+
+# Пути к служебным файлам (через функцию поиска)
+def get_template_path():
+    """Возвращает путь к файлу Ведомость_шаблон.xlsx"""
+    return find_data_file("Ведомость_шаблон.xlsx")
+
+
+def get_declensions_path():
+    """Возвращает путь к файлу точки интереса словарь.xlsx"""
+    return find_data_file("точки интереса словарь.xlsx")
+
+
+# Для обратной совместимости (чтобы не ломать старый код)
 PATHS = {
     'base_dir': get_base_path(),
     'data_folder': get_base_path() / 'data',
 }
 
-# Пути к служебным файлам
-TEMPLATE_PATH = PATHS['data_folder'] / 'Ведомость_шаблон.xlsx'
-DECLENSIONS_PATH = PATHS['data_folder'] / 'точки интереса словарь.xlsx'
+TEMPLATE_PATH = get_template_path()
+DECLENSIONS_PATH = get_declensions_path()

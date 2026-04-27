@@ -27,3 +27,20 @@
 
 ```bash
 pip install -r requirements.txt
+```
+
+## Сборка .exe
+
+Для создания исполняемого файла используйте PyInstaller:
+
+```bash
+pyinstaller --noconfirm --onedir --console --add-data "data;data" --collect-all fiona --collect-all pyogrio --hidden-import "geopandas" --hidden-import "shapely" --hidden-import "pyproj" --hidden-import "openpyxl" main.py
+```
+
+Примечание: Если папка `data` не копируется автоматически, используйте абсолютный путь:
+
+```bash
+pyinstaller --noconfirm --onedir --console --add-data "C:\путь\к\проекту\data;data/" --collect-all fiona --collect-all pyogrio --hidden-import "geopandas" --hidden-import "shapely" --hidden-import "pyproj" --hidden-import "openpyxl" "C:\путь\к\проекту\main.py"
+```
+
+После сборки готовая программа находится в папке `dist/main/`. Распространяйте всю папку целиком.

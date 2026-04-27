@@ -5,3 +5,6 @@ tempCodeRunnerFile.python
 test.ipynb 
 .vscode/ 
 .DS_Store 
+dist/ 
+build/ 
+*.spec 
