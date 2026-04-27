@@ -8,3 +8,6 @@ test.ipynb
 dist/ 
 build/ 
 *.spec 
+dist/ 
+build/ 
+*.spec 
